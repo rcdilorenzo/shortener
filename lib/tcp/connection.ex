@@ -2,7 +2,6 @@ defmodule Shortener.TCP.Connection do
   use GenServer
   require Logger
   alias Shortener.TCP.Handler
-  alias Shortener.Worker
 
   def start_link(conn) do
     Supervisor.start_child(Shortener.Worker.Supervisor, [[name: worker_name(conn)]])
