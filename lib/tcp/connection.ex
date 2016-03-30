@@ -5,21 +5,27 @@ defmodule Shortener.TCP.Connection do
 
   def start_link(conn) do
     Supervisor.start_child(Shortener.Worker.Supervisor, [[name: worker_name(conn)]])
-    Task.start_link(fn -> loop(conn) end)
+    Task.start_link(fn ->
+      Process.register(self(), name(conn))
+      loop(conn, worker_name(conn))
+    end)
   end
 
-  def loop(conn) do
+  def loop(conn, worker_name) do
     case :gen_tcp.recv(conn, 0) do
       {:ok, data} ->
         command = clean_input(data)
         result = worker_name(conn) |> Handler.process(command)
         :gen_tcp.send(conn, result <> "\n")
         log_request(conn, command)
-        loop(conn)
+        loop(conn, worker_name)
       {:error, error} ->
-        Logger.info "Peer disconnected: #{error}"
+        Logger.info "[#{worker_name}]: Peer disconnected: #{error}"
+        GenServer.stop(worker_name)
     end
   end
+
+  def name(conn), do: String.to_atom("#{__MODULE__}.#{worker_name(conn)}")
 
   def worker_name(conn) do
     {:ok, {{a, b, c, d}, _}} = :inet.peername(conn)

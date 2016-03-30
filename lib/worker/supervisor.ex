@@ -12,7 +12,7 @@ defmodule Shortener.Worker.Supervisor do
     table = :ets.new(table_name, [:set, :public])
 
     children = [
-      worker(Shortener.Worker, [table])
+      worker(Shortener.Worker, [table], restart: :transient)
     ]
 
     supervise(children, strategy: :simple_one_for_one)

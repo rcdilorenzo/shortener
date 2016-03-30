@@ -9,6 +9,8 @@ defmodule Shortener do
       supervisor(Shortener.Worker.Supervisor, [config(:table, :urls)])
     ], else: []
 
+    if config(:debug, false), do: :observer.start
+
     Supervisor.start_link(children, [name: __MODULE__, strategy: :one_for_one])
   end
 
