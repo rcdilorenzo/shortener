@@ -32,7 +32,7 @@ defmodule Shortener.TCP.Handler do
   def process(worker, "/url " <> short) do
     case Shortener.Worker.url(worker, short) do
       {:ok, url} -> url
-      _ -> error(worker)
+      _ -> "URL does not exist."
     end
   end
 
