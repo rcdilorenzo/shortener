@@ -1,20 +1,11 @@
 # Shortener
 
-**TODO: Add description**
+To run the demo application simply run:
 
-## Installation
+    mix run --no-halt
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+While the server is running, an observer window should appear and you can easily inspect the processes going on.
 
-  1. Add shortener to your list of dependencies in `mix.exs`:
+To connect, feel free to use telnet:
 
-        def deps do
-          [{:shortener, "~> 0.0.1"}]
-        end
-
-  2. Ensure shortener is started before your application:
-
-        def application do
-          [applications: [:shortener]]
-        end
-
+    telnet localhost 1337
